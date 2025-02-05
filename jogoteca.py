@@ -13,6 +13,7 @@ jogo3 = Jogo('Mortal Kombate', 'Luta', 'PS2')
 lista = [jogo1, jogo2, jogo3]
 
 app = Flask(__name__)
+app.secret_key = 'alura'
 
 @app.route('/')
 def index():
@@ -39,11 +40,18 @@ def login():
 @app.route('/autenticar', methods=['POST',])
 def autenticar():
     if 'alohomora' == request.form['senha']:
-
+        session['usuario_logado'] = request.form['usuario']
+        flash(session['usuario_logado'] + ' logado com sucesso!')
         return redirect('/')
     else:
-       
+        flash('Usuario não logado.')
         return redirect('/login')
+
+@app.route('/logout')
+def logout():
+    session['usuario_logado'] = None
+    flash('Logout efetuado com sucesso!')
+    return redirect('/')
 
 
 app.run(debug=True)
